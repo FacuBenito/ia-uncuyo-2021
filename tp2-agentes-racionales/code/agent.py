@@ -48,7 +48,7 @@ class Agent:
 		if(env.isDirty()):
 			self.suck()
 		else:
-			self.iddle()
+			self.idle()
 
 
 
