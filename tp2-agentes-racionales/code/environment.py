@@ -23,7 +23,7 @@ class Enviroment:
 		self.initPosY = initPosY
 		self.dirtRate = dirtRate
 		self.matrix = self.fillMatrix(dirtRate)
-		self.currentPosY = initPosX
+		self.currentPosX = initPosX
 		self.currentPosY = initPosY
 	
 	def fillMatrix(self, dirtRate):
@@ -33,6 +33,8 @@ class Enviroment:
 
 		# Fills the matrix with random dirty slots with as many dirty slot
 		# as the dirt rate indicates (totalSlots*dirtRate)
+		# this is less precise when we have small enviroments, for example:
+		# 0.8 dirtRate is not possible in 2x2 enviroments since we only have 4 slots.
 		while dirtySlots > 0:
 			x = randint(0, self.sizeX - 1)
 			y = randint(0, self.sizeY - 1)
@@ -44,16 +46,18 @@ class Enviroment:
 		return matrix
 
 	def isDirty(self):
-		return self.matrix[self.currentPosX][self.currentPosY] == 1
+		return self.matrix[self.currentPosY][self.currentPosX] == 1
 	
 	def acceptAction(self, action):
-		print('acceptAction')
+		action()
 
 	def getPerformance(self):
-		print('getPerformance')
+		verifyDirtiness(self.matrix)
 	
 	def printEnviroment(self):
 		printMatrix(self.matrix)
+
+	
 
 
 	
