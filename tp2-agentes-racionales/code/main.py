@@ -2,7 +2,7 @@ from environment import *
 from agent import *
 from random import randint
 
-sizeX = 8
+sizeX = 128
 sizeY = sizeX
 initPosX = randint(0, sizeX-1)
 initPosY = randint(0, sizeY-1)
