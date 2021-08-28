@@ -10,12 +10,12 @@ class Environment:
 		self.goalPosX = goalPosX
 		self.goalPosY = goalPosY
 		self.matrix[initPosY][initPosX] = Node('start', 0, initPosY, initPosX)
-		self.matrix[goalPosY][goalPosX] = Node('goal', randint(0,100), goalPosY, goalPosX)
+		self.matrix[goalPosY][goalPosX] = Node('goal', 1, goalPosY, goalPosX)
 		self.currentPosX = initPosX
 		self.currentPosY = initPosY
 
 	def fillMatrix(self):
-		matrix = [[Node('normal', randint(0, 0), j, i) for i in range(20)] for j in range(20)]
+		matrix = [[Node('normal', 1, j, i) for i in range(20)] for j in range(20)]
 		obstacleCount = 20
 
 		while obstacleCount > 0:
@@ -27,7 +27,7 @@ class Environment:
 				matrix[y][x].nodeType != 'goal' and 
 				matrix[y][x].nodeType != 'obstacle'
 			):
-				matrix[y][x] = Node('obstacle', 0, y, x)
+				matrix[y][x] = Node('obstacle', 1, y, x)
 				obstacleCount = obstacleCount - 1
 
 		return matrix
