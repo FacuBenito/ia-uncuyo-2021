@@ -3,6 +3,8 @@ from queue import PriorityQueue
 class Agent:
 	def __init__(self, environment):
 		self.env = environment
+		self.explored = [] # For DFS
+		self.stateCount = 0
 
 	def up(self):
 		env = self.env
@@ -41,7 +43,6 @@ class Agent:
 		posY = currentState[0]
 		posX = currentState[1]
 		actions = []
-
 
 		if(
 			posX < len(matrix[0]) - 1 and 
@@ -90,14 +91,9 @@ class Agent:
 		currentNode = solution
 		states = []
 
-		if(type(solution) == list):
-			states = solution
-		else:
-			while currentNode != None:
-				states.append(currentNode.state)
-				currentNode = currentNode.parent
-
-		print(states)
+		while currentNode != None:
+			states.append(currentNode.state)
+			currentNode = currentNode.parent
 			
 		for i in range(len(states)):
 			state = states[i]
@@ -128,6 +124,7 @@ class Agent:
 				return False
 
 			currentNode = frontier.pop(0)
+			self.stateCount += 1
 			explored.append(currentNode)
 
 			actions = self.getActions(currentNode, frontier, explored)
@@ -154,6 +151,7 @@ class Agent:
 				return False
 			
 			currentNode = frontier.pop(0)
+			self.stateCount += 1
 			posY = currentNode[0]
 			posX = currentNode[1]
 
@@ -180,7 +178,6 @@ class Agent:
 		matrix = self.env.matrix
 		posY = currentNode.state[0]
 		posX = currentNode.state[1]
-
 		actions = []
 
 		if(
@@ -188,6 +185,7 @@ class Agent:
 			matrix[posY][posX + 1].nodeType != 'obstacle' and 
 			matrix[posY][posX + 1].state not in explored
 		):
+			matrix[posY][posX + 1].parent = matrix[posY][posX]
 			actions.append('checkRight')
 		
 		if(
@@ -195,6 +193,7 @@ class Agent:
 			matrix[posY][posX - 1].nodeType != 'obstacle' and 
 			matrix[posY][posX - 1].state not in explored
 		):
+			matrix[posY][posX - 1].parent = matrix[posY][posX]
 			actions.append('checkLeft')
 		
 		if(
@@ -202,6 +201,7 @@ class Agent:
 			matrix[posY + 1][posX].nodeType != 'obstacle' and 
 			matrix[posY + 1][posX].state not in explored
 		):
+			matrix[posY + 1][posX].parent = matrix[posY][posX]
 			actions.append('checkDown')
 		
 		if(
@@ -209,6 +209,7 @@ class Agent:
 			matrix[posY - 1][posX].nodeType != 'obstacle' and 
 			matrix[posY - 1][posX].state not in explored
 		):
+			matrix[posY - 1][posX].parent = matrix[posY][posX]
 			actions.append('checkUp')
 
 		return actions
@@ -218,34 +219,35 @@ class Agent:
 		initY = self.env.initPosY
 		initX = self.env.initPosX
 
-		print(initY, initX)
-		print(self.env.goalPosY, self.env.goalPosX)
+		print(len(matrix)*3)
+		return self.DLS_Recursive(matrix[initY][initX], len(matrix)*3)
 
-		explored = []
-
-		return self.DLS_Recursive(matrix[initY][initX], explored, 200)
-
-	def DLS_Recursive(self, currentNode, explored, limit):
+	def DLS_Recursive(self, currentNode, limit):
 		env = self.env
+		matrix = env.matrix
+	
+		self.explored.append(currentNode.state)
+		self.stateCount += 1
+
+		if(currentNode.state != (env.initPosY, env.initPosX)):
+			currentNode.icon = getattr(icons, 'explored')
 
 		if(currentNode.state == (env.goalPosY, env.goalPosX)):
-			return explored
-		elif (limit == 0):
+			return matrix[currentNode.state[0]][currentNode.state[1]]
+		elif (limit <= 0):
 			return False
 		
-		explored.append(currentNode.state)
-
-		actions = self.getActionsDLS(currentNode, explored)
+		actions = self.getActionsDLS(currentNode, self.explored)
 
 		for action in actions:
 			callback = getattr(self, action)
 			nextNode = callback(currentNode.state)
-
+			
 			if(nextNode.state == (env.goalPosY, env.goalPosX)):
-				return explored
+				return matrix[nextNode.state[0]][nextNode.state[1]]
 
-			result = self.DLS_Recursive(nextNode, explored, limit - 1)
+			result = self.DLS_Recursive(nextNode, limit - 1)
 
 			if(result != False):
 				return result
-			return False
+		return False

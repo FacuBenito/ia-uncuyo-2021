@@ -4,7 +4,8 @@ icons = type('',(object,),{
 	'start': u'\u26F2',
 	'obstacle': u'\u26D4', 
 	'path':   u'\u26AA',
-	'normal': u'\u26AB'
+	'normal': u'\u26AB',
+	'explored': '  '
 	})()
 
 # Frontera: nodos a los que me puedo mover pero no he explorado

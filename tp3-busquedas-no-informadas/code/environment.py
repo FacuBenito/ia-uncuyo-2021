@@ -16,7 +16,7 @@ class Environment:
 
 	def fillMatrix(self):
 		matrix = [[Node('normal', 1, j, i) for i in range(20)] for j in range(20)]
-		obstacleCount = 20
+		obstacleCount = 50
 
 		while obstacleCount > 0:
 			y = randint(0,19)
