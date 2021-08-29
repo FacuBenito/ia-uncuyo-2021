@@ -1,0 +1,1 @@
+![Grafico con A*](grafico-a-estrella.png)
