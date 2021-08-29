@@ -152,11 +152,11 @@ class Agent:
 			
 			currentNode = frontier.pop(0)
 			self.stateCount += 1
+			
 			posY = currentNode[0]
 			posX = currentNode[1]
 
 			if(posY == env.goalPosY and posX == env.goalPosX):
-				print('Hola')
 				return matrix[posY][posX]
 
 			explored.append(currentNode)
@@ -167,13 +167,11 @@ class Agent:
 				nextNode = callback(currentNode)
 
 				if(nextNode.state[0] == env.goalPosY and nextNode.state[1] == env.goalPosX):
-					print('Chau')
 					return matrix[nextNode.state[0]][nextNode.state[1]]
 
 				frontier.append(nextNode.state)
 				frontier.sort(key = self.getSortKey)
 
-	
 	def getActionsDLS(self, currentNode, explored):
 		matrix = self.env.matrix
 		posY = currentNode.state[0]
@@ -219,7 +217,6 @@ class Agent:
 		initY = self.env.initPosY
 		initX = self.env.initPosX
 
-		print(len(matrix)*3)
 		return self.DLS_Recursive(matrix[initY][initX], len(matrix)*3)
 
 	def DLS_Recursive(self, currentNode, limit):
@@ -251,3 +248,4 @@ class Agent:
 			if(result != False):
 				return result
 		return False
+		

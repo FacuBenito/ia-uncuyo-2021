@@ -15,12 +15,12 @@ class Environment:
 		self.currentPosY = initPosY
 
 	def fillMatrix(self):
-		matrix = [[Node('normal', 1, j, i) for i in range(20)] for j in range(20)]
+		matrix = [[Node('normal', 1, j, i) for i in range(100)] for j in range(100)]
 		obstacleCount = 50
 
 		while obstacleCount > 0:
-			y = randint(0,19)
-			x = randint(0,19)
+			y = randint(0,99)
+			x = randint(0,99)
 
 			if(
 				matrix[y][x].nodeType != 'start' and 
