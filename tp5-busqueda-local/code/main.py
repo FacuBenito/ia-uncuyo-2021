@@ -1,10 +1,12 @@
 from board import *
 
-board = Board(4)
+board = Board(8)
 
 board.printBoard()
+print('--------')
+print('h', board.hillClimbing())
+board.printBoard()
 
-count = 0
-for i in range(board.size):
-	count = count + board.calculateQueensAffected(board.queensList[i])
-print(count)
+# print('Estados: ', board.stateCount)
+# print('Reinas afectadas: ', board.queensAffected)
+# board.printBoard()
