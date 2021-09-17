@@ -11,6 +11,7 @@ class Board:
 		self.queensAffected = 0
 		self.queensList = []
 		self.matrix = self.initMatrix(self.size)
+		self.time = 1
 
 	def initMatrix(self, size):
 		matrix = [[Slot(size**2, 'normal', col, row) for row in range(size)] for col in range(size)]
@@ -27,7 +28,8 @@ class Board:
 		for i in range(self.size):
 			for j in range(self.size):
 				if(self.matrix[i][j].slotType == 'normal'):
-					print(u'\u25A2', end=' ')
+					# print(u'\u25A2', end=' ')
+					print(self.matrix[i][j].bestState, end=' ')
 				else:
 					print(u'\u2655', end=' ')
 			print()
@@ -89,8 +91,47 @@ class Board:
 			self.queensList[col].slotType = 'normal'
 			self.queensList[col] = matrix[row][col]
 			matrix[row][col].slotType = 'queen'
-			self.stateCount += 1
+			self.stateCount = self.stateCount + 1
 			self.limit -= 1
 		
 		return minimum
-	
+
+
+	def simulatedAnnealing(self):
+		matrix = self.matrix
+		minimum = self.size**2
+
+		while (self.limit > 0 or minimum > 0):
+			currentMinimum = self.size**2
+			row = 0
+			col = 0
+
+			self.calculateQueensAffected()
+			
+			for i in range(len(matrix)):
+				for j in range(len(matrix)):
+					randCol = randint(0, len(matrix)-1)
+					randRow = randint(0, len(matrix)-1)
+					if(matrix[randRow][randCol].bestState < currentMinimum):
+						currentMinimum = matrix[randRow][randCol].bestState
+						row = randRow
+						col = randCol
+					else:
+						probability = 1 / self.time
+						randomNumber = randint(1, 100)
+
+						if(randomNumber <= probability):
+							currentMinimum = matrix[randRow][randCol].bestState
+							row = randRow
+							col = randCol
+			if(currentMinimum >= minimum):
+				break;
+			minimum = currentMinimum
+			self.queensList[col].slotType = 'normal'
+			self.queensList[col] = matrix[row][col]
+			matrix[row][col].slotType = 'queen'
+			self.stateCount += 1
+			self.time += 1
+			self.limit -= 1
+		
+		return minimum
